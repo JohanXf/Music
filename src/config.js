@@ -2,7 +2,7 @@
 module.exports = {
   token: process.env.DISCORD_TOKEN || '', // your discord bot token
   clientId: process.env.CLIENT_ID || "",
-  prefix: process.env.PREFIX || '!!', // bot prefix
+  prefix: process.env.PREFIX || ',', // bot prefix
   ownerID: (process.env.OWNER_IDS || '').split(','), //your discord id
   SpotifyID: process.env.SPOTIFY_ID || 'e6f84fbec2b44a77bf35a20c5ffa54b8', // spotify client id
   SpotifySecret: process.env.SPOTIFY_SECRET || '498f461b962443cfaf9539c610e2ea81', // spotify client secret
