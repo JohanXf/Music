@@ -20,9 +20,9 @@ module.exports = {
       const embed = new EmbedBuilder()
         .setAuthor({ name: `Owner Information`, iconURL: client.user.displayAvatarURL() })
         .setFooter({ text: `Requested By ${message.author.username}`, iconURL: message.author.displayAvatarURL() })
-        .setColor('#ff0000')
+        .setColor('#21232B')
         .setTitle("Hey, It's A Quality Music Bot With Breathtaking Feature")
-        .setDescription(`<:flame_owner:1475040508916269129> Here Is My Owner & Developer [${owner.tag}](https://discord.com/users/${ownerID})`);
+        .setDescription(`Here Is My Owner & Developer [${owner.tag}](https://discord.com/users/${ownerID})`);
 
       message.reply({ embeds: [embed] });
     } catch (error) {

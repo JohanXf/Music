@@ -13,6 +13,7 @@
   "bugs": "https://github.com/Ankush26030",
   "homepage": "https://github.com/Ankush26030",
   "dependencies": {
+    "@google/generative-ai": "^0.24.1",
     "@sapphire/ratelimits": "^2.4.9",
     "axios": "^1.4.0",
     "better-sqlite3": "^11.9.0",
