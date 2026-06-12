@@ -20,7 +20,7 @@ const commandRateLimitManager = new RateLimitManager(10000, 8);
 
 // User-specific reaction configuration
 const userReactions = {
-  '622786214776406017': ['<:owner:1475040564461178910>', '<:Dev:1475040497666887770>', '<:Atul:1475040484886839327>'], // Another user example
+  '1113028657762549770': ['<:owner:1475040564461178910>', '<:Dev:1475040497666887770>', '<:Atul:1475040484886839327>'], // Another user example
 };
 
 module.exports = {
@@ -30,6 +30,42 @@ module.exports = {
     if (!message.guild) return;
     if (message.channel.type == ChannelType.DM || message.channel.type == ChannelType.GuildForum) return;
     if (message.partial) await message.fetch();
+
+        // ===== GHOST CONFESSION SYSTEM START =====
+    const CONFESSION_CHANNEL_ID = '1514934915911651458'; 
+    const LOG_CHANNEL_ID = '1514935116055707699'; 
+
+    if (message.channel.id === CONFESSION_CHANNEL_ID) {
+        // Delete original message
+        await message.delete().catch(() => {});
+
+        // Public Embed (Caramel/Beige Theme)
+        const publicEmbed = new EmbedBuilder()
+            .setTitle('💬 New Confession')
+            .setDescription(message.content)
+            .setColor('#D2B48C') 
+            .setTimestamp();
+        
+        await message.channel.send({ embeds: [publicEmbed] });
+
+        // Private Log for Owner
+        const logChannel = client.channels.cache.get(LOG_CHANNEL_ID);
+        if (logChannel) {
+            const logEmbed = new EmbedBuilder()
+                .setTitle('👤 Confession Log')
+                .addFields(
+                    { name: 'User', value: `${message.author.tag}`, inline: true },
+                    { name: 'ID', value: `${message.author.id}`, inline: true },
+                    { name: 'Message', value: message.content }
+                )
+                .setColor('#FF0000')
+                .setTimestamp();
+            await logChannel.send({ embeds: [logEmbed] });
+        }
+        return; // Stops the message from triggering AFK or other commands
+    }
+    // ===== GHOST CONFESSION SYSTEM END =====
+    
     
      // ===== AFK SYSTEM START =====
     try {
@@ -201,7 +237,7 @@ if (client.config.ownerID.some(ownerId => message.content.includes(`<@${ownerId}
         .addFields([{
           name: `__**Guild Settings**__`, value: `My Prefix: **${prefix}**\nLanguage: **English**\nServer I'd: **${message.guild.id}**`, inline: false
         }])
-        .setFooter({text: `Developed With ❤️ By The Ankush`, iconURL: message.author.displayAvatarURL({ dynamic: true })});
+        .setFooter({text: `Developed With ❤️ By The FaizenSosuke`, iconURL: message.author.displayAvatarURL({ dynamic: true })});
 
       const mentionRlBucket = spamRateLimitManager.acquire(`${message.author.id}`);
       if (mentionRlBucket.limited && !owner) {

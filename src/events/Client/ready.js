@@ -31,7 +31,7 @@ module.exports = {
             });
         }, 5000);
         
-        const supportGuild = client.guilds.cache.get("1221909487472869619");
+        const supportGuild = client.guilds.cache.get("1281317452881465434");
         if (supportGuild) {
             const role = supportGuild.roles.premiumSubscriberRole;
             if (role) {
@@ -41,7 +41,7 @@ module.exports = {
                     const existing = await NoPrefixes.findOne({ where: { userId: booster.id } });
                     if (!existing) {
                         await NoPrefixes.create({ userId: booster.id });
-                        await client.channels.cache.get("1364788828514287646")?.send(`✅ Auto NoPrefix Added to \`${booster.user.tag}\``);
+                        await client.channels.cache.get("1479760785206153287")?.send(`✅ Auto NoPrefix Added to \`${booster.user.tag}\``);
                     }
                 }
             }

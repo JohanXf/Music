@@ -12,7 +12,7 @@ async function createBirthdayCard(member) {
 
     // Draw Avatar
     const avatar = await loadImage(member.user.displayAvatarURL({ extension: 'png' }));
-    ctx.drawImage(avatar, 600, 100, 250, 250);
+    ctx.drawImage(avatar, 0, 0, 450, 450);
 
     // Text
     ctx.fillStyle = '#ffffff';
