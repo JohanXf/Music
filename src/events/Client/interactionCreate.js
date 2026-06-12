@@ -37,9 +37,9 @@ module.exports = {
 
       const dobInput = new TextInputBuilder()
         .setCustomId('dob')
-        .setLabel('Date of Birth (DD/MM)')
+        .setLabel('Date of Birth (DD/MM/YYYY)')
         .setStyle(TextInputStyle.Short)
-        .setPlaceholder('e.g., 12/06')
+        .setPlaceholder('e.g., 12/06/2001')
         .setRequired(true);
 
       const genderInput = new TextInputBuilder()
