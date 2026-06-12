@@ -1,4 +1,5 @@
 const { InteractionType, EmbedBuilder, ButtonBuilder, ButtonStyle, ActionRowBuilder } = require("discord.js");
+const fs = require('fs');
 const Prefix = require('../../models/prefix');
 const FavPlay = require("../../models/playlist");
 
@@ -23,6 +24,55 @@ module.exports = {
             .setDescription('An unexpected error occurred.')],
           ephemeral: true,
         }).catch(() => { });
+      }
+    } 
+    
+    // 2. Handle Birthday Button — show the modal
+    if (interaction.isButton() && interaction.customId === 'bday_button') {
+      const { ModalBuilder, TextInputBuilder, TextInputStyle } = require('discord.js');
+
+      const modal = new ModalBuilder()
+        .setCustomId('bday_modal')
+        .setTitle('Set Your Birthday Details');
+
+      const dobInput = new TextInputBuilder()
+        .setCustomId('dob')
+        .setLabel('Date of Birth (DD/MM)')
+        .setStyle(TextInputStyle.Short)
+        .setPlaceholder('e.g., 12/06')
+        .setRequired(true);
+
+      const genderInput = new TextInputBuilder()
+        .setCustomId('gender')
+        .setLabel('Gender (male/female)')
+        .setStyle(TextInputStyle.Short)
+        .setPlaceholder('male or female')
+        .setRequired(true);
+
+      modal.addComponents(
+        new ActionRowBuilder().addComponents(dobInput),
+        new ActionRowBuilder().addComponents(genderInput)
+      );
+
+      return await interaction.showModal(modal);
+    }
+
+    // 3. Handle Birthday Modal Submission
+    if (interaction.isModalSubmit() && interaction.customId === 'bday_modal') {
+      const dob = interaction.fields.getTextInputValue('dob');
+      const gender = interaction.fields.getTextInputValue('gender');
+      const filePath = './src/base/birthdays.json';
+
+      try {
+        let raw = '{}';
+        try { raw = fs.readFileSync(filePath, 'utf8'); } catch (_) {}
+        const data = raw.trim() ? JSON.parse(raw) : {};
+        data[interaction.user.id] = { dob, gender };
+        fs.writeFileSync(filePath, JSON.stringify(data, null, 2));
+        return await interaction.reply({ content: '✅ Birthday saved!', ephemeral: true });
+      } catch (err) {
+        console.error(err);
+        return await interaction.reply({ content: '❌ Error saving birthday.', ephemeral: true });
       }
     }
 

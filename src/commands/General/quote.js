@@ -4,57 +4,72 @@ const { createCanvas, loadImage } = require('canvas');
 module.exports = {
     name: 'quote',
     category: 'General',
-    description: 'Turns a replied message into a quote image.',
+    description: 'Generates a premium quote image.',
     execute: async (message, args, client) => {
-        // 1. Check if the user is replying to a message
-        if (!message.reference) {
-            return message.reply("❌ Please reply to a message you want to quote!");
-        }
-
+        if (!message.reference) return message.reply("❌ Please reply to a message!");
         const repliedMsg = await message.channel.messages.fetch(message.reference.messageId);
-        if (!repliedMsg.content) return message.reply("❌ That message has no text to quote.");
 
-        // 2. Setup Canvas
-        const canvas = createCanvas(800, 400);
+        // 1. Setup Canvas
+        const canvas = createCanvas(900, 450);
         const ctx = canvas.getContext('2d');
 
-        // Draw dark background
+        // Draw rounded container
         ctx.fillStyle = '#000000';
-        ctx.fillRect(0, 0, canvas.width, canvas.height);
+        ctx.beginPath();
+        ctx.roundRect(0, 0, 900, 450, 30);
+        ctx.fill();
+        ctx.clip();
 
-        // 3. Load and Draw Avatar (on the left)
-        const avatar = await loadImage(repliedMsg.author.displayAvatarURL({ extension: 'png', size: 512 }));
-        ctx.drawImage(avatar, 20, 50, 300, 300);
+        // 2. Load & Draw Avatar with Gradient Fade
+        const avatar = await loadImage(repliedMsg.author.displayAvatarURL({ extension: 'png', size: 1024 }));
+        ctx.drawImage(avatar, 0, 0, 450, 450);
 
-        // 4. Draw Text (Quote)
+        const gradient = ctx.createLinearGradient(200, 0, 450, 0);
+        gradient.addColorStop(0, 'rgba(0,0,0,0)');
+        gradient.addColorStop(1, '#000000');
+        ctx.fillStyle = gradient;
+        ctx.fillRect(0, 0, 450, 450);
+
+        // 3. Draw Text
         ctx.fillStyle = '#ffffff';
-        ctx.font = 'bold 30px Arial';
         
-        // Simple text wrap
-        const text = repliedMsg.content;
-        const words = text.split(' ');
-        let line = '';
-        let y = 100;
+        // Wrap text with quotes
+        ctx.font = 'bold 35px sans-serif';
+        const formattedQuote = `“${repliedMsg.content}”`;
+        const lines = wrapText(ctx, formattedQuote, 400);
         
-        for (let n = 0; n < words.length; n++) {
-            let testLine = line + words[n] + ' ';
-            if (ctx.measureText(testLine).width > 400) {
-                ctx.fillText(line, 350, y);
-                line = words[n] + ' ';
-                y += 40;
-            } else {
-                line = testLine;
-            }
-        }
-        ctx.fillText(line, 350, y);
+        // Draw lines
+        lines.forEach((line, i) => ctx.fillText(line, 480, 150 + (i * 45)));
 
-        // Draw Author Name
-        ctx.font = 'italic 20px Arial';
+        // Attribution
+        const lastY = 150 + (lines.length * 45);
+        ctx.font = 'italic 20px sans-serif';
         ctx.fillStyle = '#aaaaaa';
-        ctx.fillText(`- ${repliedMsg.author.username}`, 350, y + 60);
+        
+        // Use server display name
+        const nameToDisplay = repliedMsg.member?.displayName ?? repliedMsg.author.username;
+        ctx.fillText(`— ${nameToDisplay}`, 480, lastY + 20);
 
-        // 5. Send Image
         const attachment = new AttachmentBuilder(canvas.toBuffer(), { name: 'quote.png' });
         await message.channel.send({ files: [attachment] });
     }
 };
+
+// Helper function for clean text wrapping
+function wrapText(ctx, text, maxWidth) {
+    const words = text.split(' ');
+    let lines = [];
+    let currentLine = words[0];
+
+    for (let i = 1; i < words.length; i++) {
+        const width = ctx.measureText(currentLine + " " + words[i]).width;
+        if (width < maxWidth) {
+            currentLine += " " + words[i];
+        } else {
+            lines.push(currentLine);
+            currentLine = words[i];
+        }
+    }
+    lines.push(currentLine);
+    return lines;
+}
