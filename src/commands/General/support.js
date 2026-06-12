@@ -14,7 +14,7 @@ module.exports = {
   execute: async (message, args, client, prefix) => {
     try {
       // Configuration
-      const supportServerLink = client.config?.supportServer || 'https://discord.com/invite/w77ymEU82a';
+      const supportServerLink = client.config?.supportServer || 'https://discord.com/invite/utshorgo';
       
       // Create the main embed
       const supportEmbed = new EmbedBuilder()
@@ -45,7 +45,7 @@ module.exports = {
       // Create buttons row
       const buttons = new ActionRowBuilder().addComponents(
         new ButtonBuilder()
-          .setLabel('Join Support Server')
+          .setLabel('Join Support HQ')
           .setStyle(ButtonStyle.Link)
           .setURL(supportServerLink),
         

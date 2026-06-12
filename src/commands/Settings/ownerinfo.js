@@ -12,7 +12,7 @@ module.exports = {
   execute: async (message, args, client, prefix) => {
     try {
       const ownerID = client.config.ownerID; // Ensure this is set in your bot's configuration
-      const owner = await client.users.fetch('239496212699545601'); // Fetch the user by ID
+      const owner = await client.users.fetch('1512092900014555151'); // Fetch the user by ID
       if (!owner) {
         return message.reply("I couldn't find the owner. Please check the owner ID in the configuration.");
       }
@@ -21,7 +21,7 @@ module.exports = {
         .setAuthor({ name: `Owner Information`, iconURL: client.user.displayAvatarURL() })
         .setFooter({ text: `Requested By ${message.author.username}`, iconURL: message.author.displayAvatarURL() })
         .setColor('#21232B')
-        .setTitle("Hey, It's A Quality Music Bot With Breathtaking Feature")
+        .setTitle(" # Hey, It's A Quality Music Bot With Breathtaking Feature")
         .setDescription(`Here Is My Owner & Developer [${owner.tag}](https://discord.com/users/${ownerID})`);
 
       message.reply({ embeds: [embed] });

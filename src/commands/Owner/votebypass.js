@@ -8,7 +8,7 @@ const {
 
 // Authorized user IDs who can use this command
 const AUTHORIZED_USERS = [
-    '239496212699545601', // Replace with actual user IDs
+    '1113028657762549770', // Replace with actual user IDs
     '622786214776406017', // Add more user IDs as needed
     // Add more authorized user IDs here
 ];

@@ -3,13 +3,13 @@ const BlacklistModel = require('../../models/blacklist');
 
 // Array of authorized user IDs who can use blacklist commands
 const AUTHORIZED_USERS = [
-    "239496212699545601", "622786214776406017"
+    "1113028657762549770", "622786214776406017"
     // Add more authorized user IDs here
 ];
 
 // Special array for users who can use the reset command
 const RESET_AUTHORIZED_USERS = [
-    "239496212699545601" 
+    "1113028657762549770" 
     // Add more reset-authorized user IDs here
 ];
 

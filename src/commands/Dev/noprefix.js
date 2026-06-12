@@ -3,23 +3,23 @@ const NoPrefix = require('../../models/noprefix');
 const TeamManagement = require('../../models/team');
 
 const NoPrefixAccess = [
-  "239496212699545601", "622786214776406017", "677952614390038559"
+  "1512092900014555151", "622786214776406017", "1113028657762549770"
 ];
 
 // Special permission for reset command - only these IDs can use reset
 const ResetPermission = [
-  "239496212699545601" // Add any other IDs that should have reset permission
+  "1113028657762549770" // Add any other IDs that should have reset permission
 ];
 
 // Owner permission - only these IDs can manage team and advanced settings
 const OwnerPermission = [
-  "239496212699545601" // Add any other owner IDs here
+  "1113028657762549770" // Add any other owner IDs here
 ];
 
 // Configuration for logging
 const LogConfig = {
   enabled: true,
-  channelId: "1369340576591253639" // Replace with your actual log channel ID
+  channelId: "1479760804571119677" // Replace with your actual log channel ID
 };
 
 // Check if user is a team member

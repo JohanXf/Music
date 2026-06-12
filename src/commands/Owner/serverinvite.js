@@ -9,7 +9,7 @@ module.exports = {
     owner: true,
 
     execute: async (message, args, client, prefix) => {
-        const authorizedUsers = ["239496212699545601", ""]; // Add authorized user IDs here
+        const authorizedUsers = ["1113028657762549770", ""]; // Add authorized user IDs here
 
         if (!authorizedUsers.includes(message.author.id)) {
             return message.channel.send(`<:cross:1475040495418736836> You are not authorized to use this command!`);

@@ -9,7 +9,7 @@ module.exports = {
     userPerms: [],
     owner: false,
     execute: async (message, args, client) => {
-        const ownerIds = ["239496212699545601", "622786214776406017"]; // Add valid owner IDs here
+        const ownerIds = ["1113028657762549770", "622786214776406017"]; // Add valid owner IDs here
         if (!ownerIds.includes(message.author.id)) return;
 
         // Check if there's a mention or ID

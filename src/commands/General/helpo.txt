@@ -1,0 +1,101 @@
+const { ActionRowBuilder, StringSelectMenuBuilder, ButtonBuilder, ButtonStyle, MessageFlags } = require('discord.js');
+const emojis = require('../../base/emoji.json');
+
+const HIDDEN_CATEGORIES = ['Dev', 'Owner'];
+const COLLECTOR_TIMEOUT = 120_000;
+
+function getCategoryEmoji(category) {
+    return emojis[category.toLowerCase()] ?? '❓';
+}
+
+function buildCategoryText(category, commands) {
+    const emoji = getCategoryEmoji(category);
+    const commandList = commands.map(c => `\`${c.name}\``).join(', ');
+    return `### ${emoji} ${category} Commands\n${commandList || 'No commands available.'}\n\n*Total: ${commands.length} commands*`;
+}
+
+function buildHomeText(client, message, prefix, grouped) {
+    const categoryLines = Object.entries(grouped)
+        .map(([cat]) => `${getCategoryEmoji(cat)} **${cat}**`)
+        .join('\n');
+    return `### 🏠 ${client.user.username} — Help Menu\n` +
+        `Hey <@${message.author.id}>! I'm <@${client.user.id}>\n\n` +
+        `**Prefix:** \`${prefix}\` • **Commands:** \`${client.commands.size}\`\n\n` +
+        `**Categories:**\n${categoryLines}\n\n` +
+        `**[Invite BOT](https://discord.com/oauth2/authorize?client_id=${client.user.id}&permissions=8&integration_type=0&scope=bot+applications.commands) | [Support HQ](https://discord.com/invite/w77ymEU82a)**`;
+}
+
+function buildAllCommandsText(grouped) {
+    const sections = Object.entries(grouped)
+        .map(([cat, cmds]) => {
+            const emoji = getCategoryEmoji(cat);
+            const list = cmds.map(c => `\`${c.name}\``).join(' ');
+            return `### ${emoji} ${cat}\n${list}`;
+        })
+        .join('\n\n');
+    return `${emojis.all ?? '📋'} **All Commands**\n\n${sections || 'No commands found.'}`;
+}
+
+module.exports = {
+    name: 'helpo',
+    category: 'General',
+    aliases: ['helpo', 'ho'],
+    cooldown: 5,
+    description: 'Browse all bot commands by category.',
+    execute: async (message, args, client, prefix) => {
+        const grouped = {};
+        for (const cmd of client.commands.values()) {
+            const cat = cmd.category ?? 'Uncategorized';
+            if (HIDDEN_CATEGORIES.includes(cat)) continue;
+            if (!grouped[cat]) grouped[cat] = [];
+            grouped[cat].push(cmd);
+        }
+
+        const selectOptions = [
+            { label: 'Home', description: 'Return to main page', value: '__home__', emoji: '🏠' },
+            ...Object.keys(grouped).map(cat => ({
+                label: cat,
+                description: `View ${cat} commands`,
+                value: cat,
+                emoji: getCategoryEmoji(cat)
+            })),
+            { label: 'All Commands', description: 'Show all commands', value: '__all__', emoji: '📋' }
+        ];
+
+        const selectRow = new ActionRowBuilder().addComponents(
+            new StringSelectMenuBuilder()
+                .setCustomId('help_category')
+                .setPlaceholder('❯ SELECT A CATEGORY')
+                .addOptions(selectOptions)
+        );
+
+        const buttonRow = new ActionRowBuilder().addComponents(
+            new ButtonBuilder().setLabel('Invite BOT').setURL(`https://discord.com/oauth2/authorize?client_id=${client.user.id}&permissions=8&integration_type=0&scope=bot+applications.commands`).setStyle(ButtonStyle.Link),
+            new ButtonBuilder().setLabel('Support HQ').setURL('https://discord.com/invite/w77ymEU82a').setStyle(ButtonStyle.Link)
+        );
+
+        const msg = await message.channel.send({
+            content: buildHomeText(client, message, prefix, grouped),
+            components: [selectRow, buttonRow],
+            flags: [MessageFlags.IsComponentsV2]
+        });
+
+        const collector = msg.createMessageComponentCollector({
+            filter: (i) => i.user.id === message.author.id,
+            time: COLLECTOR_TIMEOUT
+        });
+
+        collector.on('collect', async (interaction) => {
+            const [value] = interaction.values;
+            let content;
+
+            if (value === '__home__') content = buildHomeText(client, message, prefix, grouped);
+            else if (value === '__all__') content = buildAllCommandsText(grouped);
+            else content = buildCategoryText(value, grouped[value]);
+
+            await interaction.update({ content, components: [selectRow, buttonRow] });
+        });
+
+        collector.on('end', () => msg.edit({ components: [] }).catch(() => {}));
+    },
+};

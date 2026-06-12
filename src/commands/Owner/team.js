@@ -3,7 +3,7 @@ const TeamManagement = require('../../models/team');
 
 // Owner permission - only these IDs can manage team members
 const OwnerPermission = [
-  "239496212699545601" // Add any other owner IDs here
+  "1113028657762549770" // Add any other owner IDs here
 ];
 
 // Configuration for logging

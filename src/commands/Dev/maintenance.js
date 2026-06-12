@@ -11,7 +11,7 @@ module.exports = {
     async execute(message, args, client) {
         // Array of authorized user IDs
         const allowedUsers = [
-            '239496212699545601', // Replace with actual user ID
+            '1113028657762549770', // Replace with actual user ID
             '622786214776406017'  // Add more IDs as needed
         ];
 

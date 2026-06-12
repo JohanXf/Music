@@ -10,11 +10,11 @@ function getCategoryEmoji(category) {
 
 function buildCategoryEmbed(category, commands, client, message) {
   const emoji = getCategoryEmoji(category);
-  const commandList = commands.map(c => `\`${c.name}\``).join('  ');
+  const commandList = commands.map(c => `\`${c.name}\``).join(',  ');
   return new EmbedBuilder()
     .setColor(client.ankushcolor)
-    .setAuthor({ name: message.guild.name, iconURL: message.author.displayAvatarURL({ dynamic: true }) })
-    .setThumbnail(client.user.displayAvatarURL({ dynamic: true }))
+    //.setAuthor({ name: message.guild.name, iconURL: message.author.displayAvatarURL({ dynamic: true }) })
+    //.setThumbnail(client.user.displayAvatarURL({ dynamic: true }))
     .setTitle(`${emoji}  ${category} Commands`)
     .setDescription(commandList || 'No commands available.')
     .setFooter({ text: `${commands.length} command${commands.length !== 1 ? 's' : ''} in this category` })
@@ -27,20 +27,21 @@ function buildHomeEmbed(client, message, prefix, grouped) {
     .join('\n');
   return new EmbedBuilder()
     .setColor(client.ankushcolor)
-    .setAuthor({ name: message.guild.name, iconURL: message.author.displayAvatarURL({ dynamic: true }) })
-    .setThumbnail(client.user.displayAvatarURL({ dynamic: true }))
-    .setTitle(`${client.user.username} — Help Menu`)
+    //.setAuthor({ name: message.guild.name, iconURL: message.author.displayAvatarURL({ dynamic: true }) })
+    //.setThumbnail(client.user.displayAvatarURL({ dynamic: true }))
+    //.setTitle(`${client.user.username} — Help Menu`)
     .setDescription(
-      `Hey <@${message.author.id}>! I'm <@${client.user.id}>\n\n` +
+      `# ${client.user.username} — Help Menu\nExperience the next level of server interaction with ${client.user.username}. Designed to bring high-quality utility and entertainment directly to your server, ${client.user.username} is the ultimate companion for music lovers, community builders, and power users.\n\n` +
       `**Prefix:** \`${prefix}\`  •  **Commands:** \`${client.commands.size}\`\n\n` +
-      `**Categories:**\n${categoryLines}\n\n` +
-      `Use the menu below to explore a category.`
-    )
-    .addFields({
+      `**Categories:**\n${categoryLines}\n\n` + `**[Invite BOT](https://discord.com/oauth2/authorize?client_id=${client.user.id}&permissions=8&integration_type=0&scope=bot+applications.commands) || [Support HQ](https://discord.com/invite/w77ymEU82a)**` )
+    /*.addFields({
       name: '🔗 Links',
-      value: `[Invite Me](https://discord.com/oauth2/authorize?client_id=${client.user.id}&permissions=8&integration_type=0&scope=bot+applications.commands) • [Support Server](https://discord.com/invite/w77ymEU82a)`,
-    })
-    .setTimestamp();
+      value: `[Invite Me](https://discord.com/oauth2/authorize?client_id=${client.user.id}&permissions=8&integration_type=0&scope=bot+applications.commands) • [Support HQ](https://discord.com/invite/w77ymEU82a)`,
+    })*/
+    .setFooter({
+text: "Develope with 💜 by FaizenSosuke",
+iconURL: "https://cdn.discordapp.com//avatars/1512092900014555151/e727ec79581ff856222f27bffdcad390.webp?size=4096"
+});
 }
 
 function buildAllCommandsEmbed(client, message, grouped) {
@@ -53,7 +54,7 @@ function buildAllCommandsEmbed(client, message, grouped) {
     .join('\n\n');
   return new EmbedBuilder()
     .setColor(client.ankushcolor)
-    .setAuthor({ name: message.guild.name, iconURL: message.author.displayAvatarURL({ dynamic: true }) })
+    //.setAuthor({ name: message.guild.name, iconURL: message.author.displayAvatarURL({ dynamic: true }) })
     .setThumbnail(client.user.displayAvatarURL({ dynamic: true }))
     .setTitle(`${emojis.all ?? '📋'}  All Commands`)
     .setDescription(sections || 'No commands found.')
@@ -104,7 +105,7 @@ module.exports = {
       })),
       {
         label: 'All Commands',
-        description: 'Show every command at once',
+        description: 'Show All commands at once',
         value: '__all__',
         emoji: emojis.all ?? '📋',
       },
@@ -119,11 +120,11 @@ module.exports = {
 
     const buttonRow = new ActionRowBuilder().addComponents(
       new ButtonBuilder()
-        .setLabel('Invite Me')
+        .setLabel('Invite BOT')
         .setURL(`https://discord.com/oauth2/authorize?client_id=${client.user.id}&permissions=8&integration_type=0&scope=bot+applications.commands`)
         .setStyle(ButtonStyle.Link),
       new ButtonBuilder()
-        .setLabel('Support Server')
+        .setLabel('Support HQ')
         .setURL('https://discord.com/invite/w77ymEU82a')
         .setStyle(ButtonStyle.Link)
     );
@@ -131,7 +132,7 @@ module.exports = {
     // ── 4. Send the initial message ───────────────────────────────────────────
     const msg = await message.channel.send({
       embeds: [homeEmbed],
-      components: [selectRow, buttonRow],
+      components: [selectRow],
     });
 
     // ── 5. Collect interactions ───────────────────────────────────────────────
@@ -167,7 +168,7 @@ module.exports = {
         }
       }
 
-      await interaction.update({ embeds: [embed], components: [selectRow, buttonRow] });
+      await interaction.update({ embeds: [embed], components: [selectRow] });
     });
 
     collector.on('end', () => {

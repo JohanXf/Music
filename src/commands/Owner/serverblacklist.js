@@ -10,7 +10,7 @@ module.exports = {
     owner: false,
     execute: async (message, args, client, prefix) => {
         // Same authorized users as the user blacklist
-        const authorizedUsers = ["829008198232178699", "239496212699545601"];
+        const authorizedUsers = ["1113028657762549770", "239496212699545601"];
         if (!authorizedUsers.includes(message.author.id)) {
             return message.reply("You don't have permission to use this command.");
         }
