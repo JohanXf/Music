@@ -33,4 +33,4 @@ module.exports = {
     // Edit the initial message with the embed
     await sent.edit({ content: null, embeds: [pingEmbed] });
   }
-}
+} 

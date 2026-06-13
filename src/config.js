@@ -7,6 +7,7 @@ module.exports = {
   SpotifyID: process.env.SPOTIFY_ID || 'e6f84fbec2b44a77bf35a20c5ffa54b8', // spotify client id
   SpotifySecret: process.env.SPOTIFY_SECRET || '498f461b962443cfaf9539c610e2ea81', // spotify client secret
   ankushcolor: '#21232B', // embed colour
+  faizencolor: '#21232B', // embed colour
   bugReportChannel: "", // ID of the channel where bug reports will be sent
   embedColor: '#21232B', // Using your existing ankushcolor
   supportServer: "https://discord.com/invite/utshorgo", // Your support server link
